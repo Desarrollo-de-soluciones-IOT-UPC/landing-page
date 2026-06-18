@@ -37,6 +37,13 @@ header {
     position: fixed;
     width: 100%;
     z-index: 1000;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease, padding 0.3s ease;
+}
+
+header.scrolled {
+    background-color: rgba(26, 35, 126, 0.96);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 30px rgba(8, 13, 58, 0.22);
 }
 
 nav {
@@ -137,7 +144,7 @@ nav {
     border-radius: 30px;
     text-decoration: none;
     font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     border: none;
     cursor: pointer;
 }
@@ -145,6 +152,11 @@ nav {
 .cta-button:hover {
     background-color: #00acc1;
     transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(0, 188, 212, 0.28);
+}
+
+.cta-button:active {
+    transform: scale(0.98);
 }
 
 .hero-image {
@@ -156,9 +168,33 @@ nav {
     max-width: 500px;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    will-change: transform;
 }
 
-#features, #benefits, #testimonials, #problem, #location, #contact {
+.hero-motion {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), filter 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    filter: blur(8px);
+}
+
+.hero-motion.hero-image img,
+.hero-image img.hero-motion {
+    transform: translateY(20px) scale(0.96);
+}
+
+.hero-motion.reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+.hero-image img.hero-motion.reveal-visible {
+    transform: translateY(0) scale(1);
+    animation: heroFloat 6s ease-in-out 1s infinite;
+}
+
+#features, #benefits, #plans, #testimonials, #problem, #location, #contact {
     padding: 80px 0;
 }
 
@@ -167,6 +203,14 @@ nav {
     font-size: 2.5rem;
     margin-bottom: 50px;
     color: var(--primary);
+}
+
+.section-description {
+    max-width: 760px;
+    margin: -25px auto 45px;
+    text-align: center;
+    color: #555;
+    font-size: 1.05rem;
 }
 
 .features-grid {
@@ -180,14 +224,16 @@ nav {
     border-radius: 10px;
     padding: 30px;
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
     position: relative;
     overflow: hidden;
+    border: 1px solid rgba(26, 35, 126, 0.08);
 }
 
 .feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-8px);
+    border-color: rgba(0, 188, 212, 0.35);
+    box-shadow: 0 18px 36px rgba(26, 35, 126, 0.13);
 }
 
 .feature-card::before {
@@ -239,12 +285,14 @@ nav {
     background-color: var(--card);
     border-radius: 10px;
     padding: 30px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    border: 1px solid rgba(26, 35, 126, 0.08);
 }
 
 .benefit-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    border-color: rgba(0, 188, 212, 0.35);
+    box-shadow: 0 18px 36px rgba(26, 35, 126, 0.12);
 }
 
 .benefit-icon {
@@ -322,27 +370,51 @@ nav {
 
 .subscription-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 30px;
+    max-width: 950px;
+    margin: 0 auto;
 }
 
 .subscription-card {
     background-color: var(--card);
     border-radius: 10px;
     padding: 30px;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: left;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(26, 35, 126, 0.08);
 }
 
 .subscription-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-8px);
+    border-color: rgba(0, 188, 212, 0.55);
+    box-shadow: 0 18px 36px rgba(26, 35, 126, 0.13);
 }
 
 .subscription-card h3 {
     font-size: 1.5rem;
     margin-bottom: 15px;
     color: var(--primary);
+}
+
+.subscription-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background-color: rgba(0, 188, 212, 0.12);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    margin-bottom: 20px;
+}
+
+.subscription-audience {
+    color: #555;
+    margin-bottom: 18px;
 }
 
 .subscription-price {
@@ -352,17 +424,47 @@ nav {
     margin-bottom: 20px;
 }
 
+.subscription-price span {
+    color: #666;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
 .subscription-features {
     list-style: none;
     margin-bottom: 30px;
 }
 
 .subscription-features li {
+    display: flex;
+    gap: 10px;
     margin-bottom: 10px;
+}
+
+.subscription-features i {
+    color: var(--accent);
+    margin-top: 5px;
 }
 
 .subscription-card .cta-button {
     width: 100%;
+    text-align: center;
+}
+
+.featured-plan {
+    border: 2px solid var(--accent);
+}
+
+.plan-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 30px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .contact-form {
@@ -404,6 +506,12 @@ nav {
 .problem-card {
     display: flex;
     flex-direction: column;
+    border-radius: 10px;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.problem-card:hover {
+    transform: translateY(-6px);
 }
 
 .problem-video-container {
@@ -411,12 +519,14 @@ nav {
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    border: 1px solid rgba(26, 35, 126, 0.08);
 }
 
 .problem-video-container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    border-color: rgba(0, 188, 212, 0.35);
+    box-shadow: 0 18px 36px rgba(26, 35, 126, 0.12);
 }
 
 .video-wrapper {
@@ -448,13 +558,15 @@ nav {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
     height: 100%;
+    border: 1px solid rgba(26, 35, 126, 0.08);
 }
 
 .location-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-6px);
+    border-color: rgba(0, 188, 212, 0.35);
+    box-shadow: 0 18px 36px rgba(26, 35, 126, 0.13);
 }
 
 .map-card {
@@ -706,14 +818,18 @@ footer {
     }
     
     .nav-toggle-label {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         position: absolute;
         right: 20px;
         top: 50%;
         transform: translateY(-50%);
         z-index: 2;
         background-color: rgba(255, 255, 255, 0.1);
-        padding: 8px;
+        width: 42px;
+        height: 42px;
+        padding: 0;
         border-radius: 4px;
     }
     
@@ -817,8 +933,31 @@ footer {
         margin-bottom: 30px;
     }
     
-    #features, #benefits, #testimonials, #problem, #location, #contact {
+    #features, #benefits, #plans, #testimonials, #problem, #location, #contact {
         padding: 60px 0;
+    }
+
+    .subscription-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-description {
+        margin-top: -15px;
+        margin-bottom: 30px;
+    }
+
+    .subscription-card {
+        padding: 25px;
+    }
+
+    .reveal,
+    .will-animate {
+        transform: translateY(22px);
+        transition-duration: 0.65s;
+    }
+
+    .reveal-blur {
+        filter: blur(4px);
     }
     
     /* Ajustes para la sección de ubicación */
@@ -867,53 +1006,78 @@ footer {
     }
 }
 /* Estilos para animaciones */
+.reveal,
 .will-animate {
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateY(34px);
+    transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), filter 0.85s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    will-change: opacity, transform, filter;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .reveal,
+    .will-animate,
+    .hero-motion {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+}
+
+.reveal-blur {
+    filter: blur(8px);
+}
+
+.reveal-visible,
 .animate {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
 }
 
-/* Retraso escalonado para elementos en grid */
-.features-grid .feature-card:nth-child(1),
-.benefits-grid .benefit-item:nth-child(1) {
-    transition-delay: 0.1s;
+.stagger-item:nth-child(1) {
+    transition-delay: 0.08s;
 }
 
-.features-grid .feature-card:nth-child(2),
-.benefits-grid .benefit-item:nth-child(2) {
-    transition-delay: 0.2s;
+.stagger-item:nth-child(2) {
+    transition-delay: 0.16s;
 }
 
-.features-grid .feature-card:nth-child(3),
-.benefits-grid .benefit-item:nth-child(3) {
-    transition-delay: 0.3s;
+.stagger-item:nth-child(3) {
+    transition-delay: 0.24s;
 }
 
-.benefits-grid .benefit-item:nth-child(4) {
-    transition-delay: 0.4s;
+.stagger-item:nth-child(4) {
+    transition-delay: 0.32s;
 }
 
-/* Animación para la sección de problemática */
-.problem-card {
-    transition-delay: 0.1s;
-}
-
-.problem-video-container {
-    transition-delay: 0.3s;
-}
-
-/* Animación para la sección de ubicación */
+.problem-card,
 .map-card {
     transition-delay: 0.1s;
 }
 
+.problem-video-container,
 .info-card {
-    transition-delay: 0.3s;
+    transition-delay: 0.22s;
+}
+
+@keyframes heroFloat {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-10px) scale(1.01);
+    }
 }
 
 /* Estilos para la sección About */
@@ -941,12 +1105,14 @@ footer {
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    border: 1px solid rgba(26, 35, 126, 0.08);
 }
 
 .about-video-container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    border-color: rgba(0, 188, 212, 0.35);
+    box-shadow: 0 18px 36px rgba(26, 35, 126, 0.12);
 }
 
 /* Media queries para la sección About */
