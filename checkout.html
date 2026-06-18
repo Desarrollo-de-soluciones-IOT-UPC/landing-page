@@ -147,12 +147,15 @@
                             <small data-error-for="customerPhone"></small>
                         </div>
                         <div class="checkout-field">
-                            <label for="customer-type">Tipo de cliente</label>
-                            <select id="customer-type" name="customerType">
-                                <option value="home">Hogar</option>
-                                <option value="business">Empresa</option>
-                            </select>
+                            <label for="customer-type-label">Tipo de cliente</label>
+                            <input type="text" id="customer-type-label" name="customerTypeLabel" value="Hogar" readonly>
+                            <input type="hidden" id="customer-type" name="customerType" value="home">
                             <small data-error-for="customerType"></small>
+                        </div>
+                        <div class="checkout-field full-width">
+                            <label for="installation-address">Direccion de instalacion</label>
+                            <input type="text" id="installation-address" name="installationAddress" placeholder="Direccion donde se instalaran los sensores">
+                            <small data-error-for="installationAddress"></small>
                         </div>
                         <div class="business-extra-fields" data-business-fields>
                             <div class="checkout-field">
@@ -164,11 +167,6 @@
                                 <label for="company-ruc">RUC</label>
                                 <input type="text" id="company-ruc" name="companyRuc" inputmode="numeric" placeholder="20123456789" maxlength="11">
                                 <small data-error-for="companyRuc"></small>
-                            </div>
-                            <div class="checkout-field full-width">
-                                <label for="installation-address">Direccion de instalacion</label>
-                                <input type="text" id="installation-address" name="installationAddress" placeholder="Direccion donde se instalaran los sensores">
-                                <small data-error-for="installationAddress"></small>
                             </div>
                         </div>
                     </form>
@@ -184,7 +182,7 @@
                             <span>Paso 4</span>
                             <h2>Completar pago</h2>
                         </div>
-                        <p class="checkout-note">Este flujo es de demostracion. No ingreses datos reales.</p>
+                        <p class="checkout-note">EMSAFE</p>
                     </div>
                     <form class="checkout-form" id="payment-form" novalidate>
                         <div class="checkout-field">

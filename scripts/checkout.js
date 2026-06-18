@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 id: 'home-basic',
                 name: 'Hogar Basico',
                 range: '0 a 10 sensores',
-                price: 49,
+                price: 1190,
                 description: 'Ideal para hogares pequenos, departamentos o espacios familiares compactos.',
                 benefits: ['Acceso completo a la plataforma', 'Alertas e historial incluidos', 'Cobertura para zonas principales']
             },
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 id: 'home-intermediate',
                 name: 'Hogar Intermedio',
                 range: '10 a 20 sensores',
-                price: 89,
+                price: 1990,
                 description: 'Pensado para casas medianas con varias habitaciones y areas de trabajo.',
                 benefits: ['Monitoreo por ambientes', 'Mayor cobertura interior', 'Recomendado para familias activas']
             },
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 id: 'home-advanced',
                 name: 'Hogar Avanzado',
                 range: '20 a 30 sensores',
-                price: 129,
+                price: 2790,
                 description: 'Cobertura amplia para viviendas grandes o espacios con varios dispositivos.',
                 benefits: ['Cobertura extendida', 'Seguimiento por zonas', 'Ideal para hogares con oficina o estudio']
             }
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 id: 'business-initial',
                 name: 'Empresa Inicial',
                 range: '30 a 100 sensores',
-                price: 249,
+                price: 4890,
                 description: 'Ideal para oficinas pequenas, consultorios o locales comerciales.',
                 benefits: ['Cobertura por areas', 'Gestion desde plataforma', 'Preparado para espacios de atencion']
             },
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 id: 'business-professional',
                 name: 'Empresa Profesional',
                 range: '100 a 200 sensores',
-                price: 449,
+                price: 7990,
                 description: 'Para empresas con multiples ambientes, mayor flujo de personas y monitoreo constante.',
                 benefits: ['Cobertura multiambiente', 'Escalabilidad operativa', 'Recomendado para sedes medianas']
             },
@@ -47,8 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 id: 'business-corporate',
                 name: 'Empresa Corporativa',
                 range: '200 sensores a mas',
-                price: 699,
-                pricePrefix: 'Desde',
+                price: 9990,
                 description: 'Para organizaciones con sedes amplias, instituciones o instalaciones de alta demanda.',
                 benefits: ['Cobertura corporativa', 'Plan preparado para crecimiento', 'Ideal para sedes grandes']
             }
@@ -71,12 +70,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const customerForm = document.getElementById('customer-form');
     const paymentForm = document.getElementById('payment-form');
     const customerTypeInput = document.getElementById('customer-type');
+    const customerTypeLabel = document.getElementById('customer-type-label');
     const businessFields = document.querySelector('[data-business-fields]');
     const payButton = document.querySelector('[data-pay-now]');
+    const checkoutFlow = document.querySelector('.checkout-flow');
 
     function formatPrice(plan) {
-        const prefix = plan.pricePrefix ? `${plan.pricePrefix} ` : '';
-        return `${prefix}S/ ${plan.price}/mes`;
+        return `S/ ${plan.price}/mes`;
     }
 
     function planTypeLabel(type = state.planType) {
@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
         state.planType = type;
         state.selectedPlanId = plans[type][0].id;
         if (customerTypeInput) customerTypeInput.value = type;
+        if (customerTypeLabel) customerTypeLabel.value = planTypeLabel(type);
         renderPlanOptions();
         updateCartSummary();
         updateTypeFields();
@@ -172,7 +173,9 @@ document.addEventListener('DOMContentLoaded', function() {
         stepButtons.forEach(button => {
             button.classList.toggle('active', Number(button.dataset.stepButton) === state.step);
         });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const headerHeight = document.querySelector('.checkout-header') ? document.querySelector('.checkout-header').offsetHeight : 0;
+        const flowTop = checkoutFlow ? checkoutFlow.offsetTop - headerHeight - 12 : 0;
+        window.scrollTo({ top: Math.max(0, flowTop), behavior: 'smooth' });
     }
 
     function clearFormErrors(form) {
@@ -215,6 +218,10 @@ document.addEventListener('DOMContentLoaded', function() {
             setFormError(customerForm, 'customerPhone', 'Ingresa un telefono valido.');
             valid = false;
         }
+        if (!values.installationAddress) {
+            setFormError(customerForm, 'installationAddress', 'Ingresa la direccion de instalacion.');
+            valid = false;
+        }
         if (values.customerType === 'business') {
             if (!values.companyName) {
                 setFormError(customerForm, 'companyName', 'Ingresa el nombre de empresa.');
@@ -222,10 +229,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             if (values.companyRuc.length !== 11) {
                 setFormError(customerForm, 'companyRuc', 'Ingresa un RUC de 11 digitos.');
-                valid = false;
-            }
-            if (!values.installationAddress) {
-                setFormError(customerForm, 'installationAddress', 'Ingresa la direccion de instalacion.');
                 valid = false;
             }
         }
@@ -308,11 +311,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateTypeFields() {
-        const isBusiness = customerTypeInput.value === 'business';
+        customerTypeInput.value = state.planType;
+        if (customerTypeLabel) customerTypeLabel.value = planTypeLabel();
+        const isBusiness = state.planType === 'business';
         businessFields.classList.toggle('is-visible', isBusiness);
-        if (isBusiness && state.planType !== 'business') {
-            selectPlanType('business');
-        }
     }
 
     typeButtons.forEach(button => {
@@ -326,8 +328,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('[data-prev-step]').forEach(button => {
         button.addEventListener('click', () => goToCheckoutStep(state.step - 1));
     });
-
-    customerTypeInput.addEventListener('change', updateTypeFields);
 
     paymentForm.elements.cardNumber.addEventListener('input', function(event) {
         const digits = event.target.value.replace(/\D/g, '').slice(0, 16);
